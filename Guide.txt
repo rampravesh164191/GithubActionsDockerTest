@@ -14,3 +14,78 @@ npm install
 npm test : to run the test : all passed
 
 now pushing the code for the first time 
+
+--------------How to integrate gitHub Actions which is a part of CI/CD?------------------
+go to repo -> Actions -> there are multiple options : (deployment, security, continuous integration, automation, pages)
+we need CI : Continuous integration (code coming and testing) -> Node.js -> click on configure button
+now github will create a folder .gitHub -> workflows -> node.js.yml (it is like our configuration file)
+click on commit changes 
+
+git pull or git pull origin main
+
+
+----------------------------------now the configuration of basic yml file start-------------------------------------
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ] --------this means if pushed to main gitHub Actions will run
+  pull_request:
+    branches: [ "main" ] --------this means if pulled from main gitHub Actions will run
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x] --- versions of node it will test (for simplicity let's keep only 22)
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps: -----------default steps 
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+-----------------------------------------------yml end--------------------------------------------------
+
+
+--- now the first step should be to add env variables
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  # it is as good as process.env.PORT 
+  # from here gitHub secrets will be able acces these variables
+  PORT: ${{secrets.PORT}}
+  MONGO_URI: ${{secrets.MONGO_URI}}
+  JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+  OAUTH_GITHUB_CLIENT_ID: ${{secrets.OAUTH_GITHUB_CLIENT_ID}}
+  OAUTH_GITHUB_CLIENT_SECRET: ${{secrets.OAUTH_GITHUB_CLIENT_SECRET}}
+  CALLBACK_URL: ${{secrets.CALLBACK_URL}}
+  GOOGLE_APP_PASSWORD: ${{secrets.GOOGLE_APP_PASSWORD}}
+  GOOGLE_APP_EMAIL: ${{secrets.GOOGLE_APP_EMAIL}}
+
+also in .env file ----------- add OAUTH so github won't throw any error
+OAUTH_GITHUB_CLIENT_ID=Ov23licLPZ6cdgPG4Ug0
+OAUTH_GITHUB_CLIENT_SECRET=1cdad10367ce61ee1d6cf26ad43ac31866f05fec
+
+also make changes in the user routes where these ID's are used
+passport.use(new GitHubStrategy({
+    clientID: process.env.OAUTH_GITHUB_CLIENT_ID,
+    clientSecret: process.env.OAUTH_GITHUB_CLIENT_SECRET,
+
+---------------------------------------------------------------------------------
+now push the code in the gitHub  to proceed further

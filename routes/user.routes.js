@@ -135,8 +135,8 @@ UserRouter.post("/login", async (req, res) => {
 //github OAuth
 //http://localhost:3000/users/auth/github ----------takes to authorization
 passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    clientID: process.env.OAUTH_GITHUB_CLIENT_ID,
+    clientSecret: process.env.OAUTH_GITHUB_CLIENT_SECRET,
     callbackURL: process.env.CALLBACK_URL
 },
     function (accessToken, refreshToken, profile, done) {
