@@ -1,0 +1,16 @@
+GitHub Actions 
+CI/CD : continuous Integration / continuous delivery(or deployment)
+
+problem statement : let's say team1 is working on feature1 and team2 is working on feature2 and when they push code in the 
+github both code is going in the same code base, and we have to deploy that code, but before deployment we want to test 
+the code, thats where GitHub Actions come.
+- tell github to watch commits or branch eg. tell gitHub Actions to check main branch if any changes, or check this branch etc
+- so CI is done by team and CD is done by GitHub Actions
+
+first created a new Repo name : GithubActionsDockerTest
+
+i have copied backend file of unit 6 sprint 5 day 1 and pasted all code just not node_modules
+npm install
+npm test : to run the test : all passed
+
+now pushing the code for the first time 
